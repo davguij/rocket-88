@@ -1,8 +1,15 @@
 import * as dot from 'dot';
 import * as fs from 'fs-extra';
 import * as path from 'path';
+import * as simplegit from 'simple-git/promise';
 
 class Tools {
+  private _git = simplegit();
+
+  async checkoutRepo(repo: string, targetDir: string) {
+    await this._git.clone(`https://github.com/davguij/${repo}`, targetDir);
+    return;
+  }
   async compileTemplate(filePath: string, data: any) {
     if (filePath.endsWith('.tpl') === false) {
       throw new Error(

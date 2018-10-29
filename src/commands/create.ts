@@ -4,7 +4,6 @@ import cli from 'cli-ux';
 import * as fs from 'fs-extra';
 import * as inquirer from 'inquirer';
 import * as path from 'path';
-import * as simplegit from 'simple-git/promise';
 import { tools } from '../utils';
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
@@ -14,7 +13,6 @@ interface Options {
 }
 
 export class Create extends Command {
-  private _git = simplegit();
   async run() {
     const selectedOptions = await inquirer.prompt<Options>([
       {
@@ -29,10 +27,7 @@ export class Create extends Command {
     const targetDir = path.resolve(startingDir, selectedOptions.projectName);
     try {
       cli.action.start('Fetching template');
-      await this._git.clone(
-        'https://github.com/davguij/rocket-88-templates-basic',
-        targetDir
-      );
+      await tools.checkoutRepo('rocket-88-templates-basic', targetDir);
       cli.action.stop();
       cli.action.start('Interpolating template');
       process.chdir(targetDir);
